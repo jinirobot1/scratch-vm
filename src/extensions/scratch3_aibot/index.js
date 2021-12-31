@@ -79,6 +79,8 @@ class aibotSR{
          this.reset = this.reset.bind(this);
          this._onConnect = this._onConnect.bind(this);
          this._onMessage = this._onMessage.bind(this);
+
+         this.rcvCount = 0;
          
          this.array = {
             SERVO_CONTROL: 0,
@@ -272,6 +274,11 @@ class aibotSR{
                 sd[8+4+i] = val;  	
             }
             //console.log(data);
+            this.rcvCount++;
+            if(this.rcvCount > 1){
+                this.rcvCount==0;
+                this.connect_device(1);
+            }
         }
         
         var s = 0;
@@ -286,41 +293,6 @@ class aibotSR{
         }	
 
         return;
-        datas.forEach((data) => {     
-            if(data.length>=28)             
-            if(data[0]==73 && data[1]==1){  //'I'
-                for (var i = 0; i < 4; i++) {
-                    sd[i] = data[2+i];	
-                }
-                for (var i = 0; i < 4; i++) {
-                    val = (((data[6+i*2] & 0xFF) << 8) | (data[6+i*2+1] & 0xFF));
-                    sd[4+i] = val;  	
-                }
-                //console.log(data);
-            }
-            if(data[14]==73 && data[15]==2){  //'I'
-                for (var i = 0; i < 4; i++) {
-                    sd[8+i] = data[14+2+i];	
-                }                
-                for (var i = 0; i < 4; i++) {
-                    val = (((data[14+6+i*2] & 0xFF) << 8) | (data[14+6+i*2+1] & 0xFF));
-                    sd[8+4+i] = val;  	
-                }
-                console.log(data);
-            }
-            
-            var s = 0;
-            if(data.length>=14) 
-            if(data[s]==88 && data[s+1]==1){//'X'
-                for (var i = 0; i < 6; i++) {
-                    val = (((data[s+2+i*2] & 0xFF) << 8) | (data[s+2+i*2+1] & 0xFF));
-                    if(val>32767)val=val-65536;
-                    if(val>-2000 && val<2000)ad[i] = val;  	
-                    
-                }
-            }	
-        });
-
     }
     
     port_digital_out(remote,port,set){
@@ -399,6 +371,38 @@ class aibotSR{
         //console.log('control angle...');
         //console.log(cmd);
     }
+    remote_device_set(remote,v1,v2,v3){
+        const cmd = this.generateCommand(                
+            [90,remote,v1,v2,v3,255,255,255,255,255,255,255,255,255]
+            );        
+        this.send(cmd);        
+    }
+    aidesk_func(remote,func,v1,v2,v3,v4){
+        if(v1<0)v1=65536+v1;
+		if(v2<0)v2=65536+v2;
+		if(v3<0)v3=65536+v3;
+		if(v4<0)v4=65536+v4;
+        const cmd = this.generateCommand(                
+            [
+                75,remote,func, 0,
+                v1>>8, v1&0xff,
+                v2>>8, v2&0xff,
+                v3>>8, v3&0xff,
+                v4>>8, v4&0xff,
+                255, 255               
+            ]
+            );        
+        this.send(cmd);
+        //console.log('control angle...');
+        //console.log(cmd);
+    }
+    connect_device(remote){
+        const cmd = this.generateCommand(                
+            [65,remote,0,0,0,0,0,0,0,0,0,0,0,0]
+            );        
+        this.send(cmd);   
+        //console.log(cmd);     
+    }
 
 }
 
@@ -456,7 +460,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'digital_read',
                     blockType: BlockType.REPORTER,
-                    //text: FormDigitalRead[the_locale],
                     text: '디지털 [PORT]번 입력값',
                     arguments: {
                         PORT: {
@@ -469,7 +472,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'port_setting',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '입출력 [PORT]번을 [SET](으)로 설정',
                     arguments: {
                         PORT: {
@@ -487,7 +489,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'port_digital_out',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '디지털출력 [PORT]번 [SET]',
                     arguments: {
                         PORT: {
@@ -505,7 +506,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'buzzer_melody',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '부저 [MEL]번 효과음 재생',
                     arguments: {
                         MEL: {
@@ -518,7 +518,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_speed',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '제어속도를 [SPD](으)로 정하기',
                     arguments: {
                         SPD: {
@@ -531,7 +530,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_angle',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '모듈 [SV](을)를 [ANG]각도로 제어',
                     arguments: {
                         SV: {
@@ -548,7 +546,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_angle_123',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '모듈 1[ANG1], 2[ANG2], 3[ANG3] 각도로 제어',
                     arguments: {                        
                         ANG1: {
@@ -568,7 +565,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_angle_56',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '모듈 5[ANG5], 6[ANG6] 각도로 제어',
                     arguments: {  
                         ANG5: {
@@ -584,7 +580,6 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_angle_123456',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '모듈 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4], 5[ANG5], 6[ANG6] 각도로 제어',
                     arguments: {                        
                         ANG1: {
@@ -616,32 +611,190 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_go_home',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '모든 모듈을 기본위치로 제어하기(원점복귀)',
-                    arguments: {    
-                    }
-                }, 
-                {
-                    opcode: 'factory_reset',
-                    blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
-                    text: '모든 설정값 공장초기화',
                     arguments: {    
                     }
                 }, 
                 {
                     opcode: 'set_home_position',
                     blockType: BlockType.COMMAND,
-                    //text: FormLedColor[the_locale],
                     text: '[SV]번 모듈의 90도 위치를 현재의 위치로 정하기',
                     arguments: {  
                         SV: {
                             type: ArgumentType.STRING,
                             defaultValue: '1',
-                            menu: 'speed_no'
+                            menu: 'servo_no'
                         },
                     }
                 },
+                {
+                    opcode: 'factory_reset',
+                    blockType: BlockType.COMMAND,
+                    text: '모든 설정값 공장초기화',
+                    arguments: {    
+                    }
+                }, 
+                {
+                    opcode: 'remote_control_speed',
+                    blockType: BlockType.COMMAND,
+                    text: '원격의 제어속도를 [SPD](으)로 정하기',
+                    arguments: {
+                        SPD: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '1',
+                            menu: 'speed_no'
+                        },
+                    }
+                },   
+                {
+                    opcode: 'remote_control_angle',
+                    blockType: BlockType.COMMAND,
+                    text: '원격모듈 [SV](을)를 [ANG]각도로 제어',
+                    arguments: {
+                        SV: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '1',
+                            menu: 'servo_no'
+                        },
+                        ANG: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
+                },         
+                {
+                    opcode: 'remote_control_angle_123',
+                    blockType: BlockType.COMMAND,
+                    text: '원격모듈 1[ANG1], 2[ANG2], 3[ANG3] 각도로 제어',
+                    arguments: {                        
+                        ANG1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG3: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
+                },  
+                {
+                    opcode: 'remote_control_angle_56',
+                    blockType: BlockType.COMMAND,
+                    text: '원격모듈 5[ANG5], 6[ANG6] 각도로 제어',
+                    arguments: {  
+                        ANG5: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG6: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
+                },  
+                {
+                    opcode: 'remote_control_angle_123456',
+                    blockType: BlockType.COMMAND,
+                    text: '원격모듈 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4], 5[ANG5], 6[ANG6] 각도로 제어',
+                    arguments: {                        
+                        ANG1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG3: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG4: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG5: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG6: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
+                },                  
+                {
+                    opcode: 'remote_control_go_home',
+                    blockType: BlockType.COMMAND,
+                    text: '원격모듈 모듈을 기본위치로 제어하기(원점복귀)',
+                    arguments: {    
+                    }
+                }, 
+                {
+                    opcode: 'remote_device_set',
+                    blockType: BlockType.COMMAND,
+                    text: '원격 디바이스 설정',
+                    arguments: {    
+                    }
+                }, 
+                {
+                    opcode: 'aidesk_read_number',
+                    blockType: BlockType.REPORTER,
+                    text: 'AI Desk의 [FN]번 값',
+                    arguments: {
+                        FN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '1',
+                            menu: 'aidesk_read_no'
+                        },
+                    }
+                },     
+                {
+                    opcode: 'aidesk_func_start',
+                    blockType: BlockType.REPORTER,
+                    //text: FormDigitalRead[the_locale],
+                    text: 'AI Desk의 [FN]번 기능 시작하기(변수1:[VAR1], 변수2:[VAR2], 변수3:[VAR3], 변수4:[VAR4])',
+                    arguments: {
+                        FN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '1',
+                            menu: 'aidesk_read_no'
+                        },
+                        VAR1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '0',
+                        },
+                        VAR2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '0',
+                        },
+                        VAR3: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '0',
+                        },
+                        VAR4: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '0',
+                        },
+                    }
+                },     
+                {
+                    opcode: 'aidesk_func_stop',
+                    blockType: BlockType.REPORTER,
+                    //text: FormDigitalRead[the_locale],
+                    text: 'AI Desk의 [FN]번 기능 정지하기',
+                    arguments: {
+                        FN: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '1',
+                            menu: 'aidesk_read_no'
+                        },
+                    }
+                },                
                 
             ],            
             menus: {
@@ -682,6 +835,10 @@ class Scratch3aibotSR {
                 servo_no: {
                     acceptReporters: true,
                     items: ['1', '2', '3', '4' , '5' , '6']
+                },
+                aidesk_read_no: {
+                    acceptReporters: true,
+                    items: ['1', '2', '3', '4' , '5']
                 },
             }
         };
@@ -813,7 +970,7 @@ class Scratch3aibotSR {
     }
     set_home_position(args){
         let sv = parseInt(args['SV'], 10);
-        let remote = 1;
+        let remote = 4;
         let sv1=0,sv2=0,sv3=0,sv4=0,sv5=0,sv6=0;
         if(sv==1)sv1 = 1;
         else if(sv==2)sv2 = 1;
@@ -822,6 +979,99 @@ class Scratch3aibotSR {
         else if(sv==5)sv5 = 1;
         else if(sv==6)sv6 = 1; 
         this._peripheral.set_home_position(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+    }
+    remote_control_speed(args){
+        let speed = parseInt(args['SPD'], 10);
+        let remote = 2;
+        this._peripheral.control_speed(remote,speed);
+    }
+    remote_control_angle(args){
+        let sv = parseInt(args['SV'], 10);
+        let Angle = parseInt(args['ANG'], 10);
+        let remote = 2;
+        let sv1=0,sv2=0,sv3=0,sv4=0,sv5=0,sv6=0;
+        if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;
+        if(sv==1)sv1 = Angle;
+        else if(sv==2)sv2 = Angle;
+        else if(sv==3)sv3 = Angle;
+        else if(sv==4)sv4 = Angle;
+        else if(sv==5)sv5 = Angle;
+        else if(sv==6)sv6 = Angle; 
+        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+    }
+    remote_control_angle_123(args){
+        let sv1 = parseInt(args['ANG1'], 10);
+        let sv2 = parseInt(args['ANG2'], 10);
+        let sv3 = parseInt(args['ANG3'], 10);
+        let remote = 2;
+        let sv4=0,sv5=0,sv6=0;
+
+        if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
+        if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
+        if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
+        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+    }
+    remote_control_angle_56(args){
+        let sv5 = parseInt(args['ANG5'], 10);
+        let sv6 = parseInt(args['ANG6'], 10);
+        let remote = 2;
+        let sv1=0,sv2=0,sv3=0,sv4=0;
+
+        if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
+        if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
+        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+    }
+    remote_control_angle_123456(args){
+        let sv1 = parseInt(args['ANG1'], 10);
+        let sv2 = parseInt(args['ANG2'], 10);
+        let sv3 = parseInt(args['ANG3'], 10);
+        let sv4 = parseInt(args['ANG4'], 10);
+        let sv5 = parseInt(args['ANG5'], 10);
+        let sv6 = parseInt(args['ANG6'], 10);
+        let remote = 2;
+
+        if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
+        if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
+        if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
+        if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
+        if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
+        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+    }
+    remote_control_go_home(args){
+        let remote = 2;
+        this._peripheral.control_go_home(remote);
+    }
+    remote_device_set(args){
+        let remote = 2;
+        this._peripheral.remote_device_set(remote,1,1,1);
+    }
+    aidesk_read_number(args){
+        let fn = parseInt(args['FN'], 10);
+        let v = this._peripheral.sensorData.AIDESK[fn-1];
+        return v;
+    }
+    aidesk_func_start(args){
+        let func=parseInt(args['FN'], 10);
+        let Var1=parseInt(args['VAR1'], 10);
+        let Var2=parseInt(args['VAR2'], 10);
+        let Var3=parseInt(args['VAR3'], 10);
+        let Var4=parseInt(args['VAR4'], 10);
+
+        if(Var1>2000)Var1=2000;
+        if(Var1<-2000)Var1=-2000;
+        if(Var2>2000)Var2=2000;
+        if(Var2<-2000)Var2=-2000;
+        if(Var3>2000)Var3=2000;
+        if(Var3<-2000)Var3=-2000;
+        if(Var4>2000)Var4=2000;
+        if(Var4<-2000)Var4=-2000;
+        let remote = 1;
+        this._peripheral.aidesk_func(remote,func,Var1,Var2,Var3,Var4);
+    }
+    aidesk_func_stop(args){
+        let func=parseInt(args['FN'], 10);
+        let remote = 2;
+        this._peripheral.aidesk_func(remote,func,0,0,0,0);
     }
     
 
