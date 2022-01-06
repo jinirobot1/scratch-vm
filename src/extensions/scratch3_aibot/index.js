@@ -33,10 +33,12 @@ const sensorTypes = {
  * A maximum number of BT message sends per second, to be enforced by the rate limiter.
  * @type {number}
  */
-const BTSendRateMax = 20;
+const BTSendRateMax = 10;
+const SRSendInterval  = 100;
 
 
 
+const blockIconURI = 'data:image/png;base64,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';
 // flag to indicate if the user connected to a board
 
 // common
@@ -128,6 +130,9 @@ class aibotSR{
                 AD5: 0,
             },
         };
+
+        this.delayTime = 1000;
+        this.timeouts = [];
     }
     stopAll () {
 
@@ -197,8 +202,10 @@ class aibotSR{
         return _connected;
     }
     send (message, useLimiter = true) {
-        //console.log('send message....');
+        console.log('send message....');
         if (!this.isConnected()) return Promise.resolve();
+
+        
 
         if (useLimiter) {
             if (!this._rateLimiter.okayToSend()) return Promise.resolve();
@@ -403,6 +410,14 @@ class aibotSR{
         this.send(cmd);   
         //console.log(cmd);     
     }
+    removeTimeout(id) {
+        clearTimeout(id);
+        var timeouts = this.timeouts;
+        var index = timeouts.indexOf(id);
+        if (index >= 0) {
+            timeouts.splice(index, 1);
+        }
+    }
 
 }
 
@@ -442,7 +457,8 @@ class Scratch3aibotSR {
             color2: '#34B0F7',
             name: 'AIBOT',
             showStatusButton: true,
-            //blockIconURI: 'data:image/png;base64,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',
+            blockIconURI: blockIconURI,
+            
             blocks: [ 
                 {
                     opcode: 'analog_read',
@@ -755,7 +771,7 @@ class Scratch3aibotSR {
                 },     
                 {
                     opcode: 'aidesk_func_start',
-                    blockType: BlockType.REPORTER,
+                    blockType: BlockType.COMMAND,
                     //text: FormDigitalRead[the_locale],
                     text: 'AI Desk의 [FN]번 기능 시작하기(변수1:[VAR1], 변수2:[VAR2], 변수3:[VAR3], 변수4:[VAR4])',
                     arguments: {
@@ -784,7 +800,7 @@ class Scratch3aibotSR {
                 },     
                 {
                     opcode: 'aidesk_func_stop',
-                    blockType: BlockType.REPORTER,
+                    blockType: BlockType.COMMAND,
                     //text: FormDigitalRead[the_locale],
                     text: 'AI Desk의 [FN]번 기능 정지하기',
                     arguments: {
@@ -884,6 +900,12 @@ class Scratch3aibotSR {
             port = port - 4;
         }
         this._peripheral.port_setting(remote,port,set);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     port_digital_out(args){
         let pin = args['PORT'];
@@ -896,19 +918,37 @@ class Scratch3aibotSR {
             port = port - 4;
         }
         this._peripheral.port_digital_out(remote,port,set);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     buzzer_melody(args){
         let melody = parseInt(args['MEL'], 10);
         let remote = 1;
         melody = melody - 1;
         this._peripheral.buzzer_melody(remote,melody);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     control_speed(args){
         let speed = parseInt(args['SPD'], 10);
         let remote = 1;
         this._peripheral.control_speed(remote,speed);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
-    control_angle(args){
+    control_angle(args,script){
         let sv = parseInt(args['SV'], 10);
         let Angle = parseInt(args['ANG'], 10);
         let remote = 1;
@@ -920,7 +960,13 @@ class Scratch3aibotSR {
         else if(sv==4)sv4 = Angle;
         else if(sv==5)sv5 = Angle;
         else if(sv==6)sv6 = Angle; 
-        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);  
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });              
     }
     control_angle_123(args){
         let sv1 = parseInt(args['ANG1'], 10);
@@ -933,6 +979,12 @@ class Scratch3aibotSR {
         if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
         if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     control_angle_56(args){
         let sv5 = parseInt(args['ANG5'], 10);
@@ -943,6 +995,12 @@ class Scratch3aibotSR {
         if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
         if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     control_angle_123456(args){
         let sv1 = parseInt(args['ANG1'], 10);
@@ -959,14 +1017,32 @@ class Scratch3aibotSR {
         if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
         if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     control_go_home(args){
         let remote = 1;
         this._peripheral.control_go_home(remote);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     factory_reset(args){
         let remote = 2;
         this._peripheral.factory_reset(remote);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     set_home_position(args){
         let sv = parseInt(args['SV'], 10);
@@ -979,11 +1055,23 @@ class Scratch3aibotSR {
         else if(sv==5)sv5 = 1;
         else if(sv==6)sv6 = 1; 
         this._peripheral.set_home_position(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     remote_control_speed(args){
         let speed = parseInt(args['SPD'], 10);
         let remote = 2;
         this._peripheral.control_speed(remote,speed);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     remote_control_angle(args){
         let sv = parseInt(args['SV'], 10);
@@ -998,6 +1086,12 @@ class Scratch3aibotSR {
         else if(sv==5)sv5 = Angle;
         else if(sv==6)sv6 = Angle; 
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     remote_control_angle_123(args){
         let sv1 = parseInt(args['ANG1'], 10);
@@ -1010,6 +1104,12 @@ class Scratch3aibotSR {
         if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
         if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     remote_control_angle_56(args){
         let sv5 = parseInt(args['ANG5'], 10);
@@ -1020,6 +1120,12 @@ class Scratch3aibotSR {
         if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
         if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     remote_control_angle_123456(args){
         let sv1 = parseInt(args['ANG1'], 10);
@@ -1036,14 +1142,32 @@ class Scratch3aibotSR {
         if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
         if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     remote_control_go_home(args){
         let remote = 2;
         this._peripheral.control_go_home(remote);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     remote_device_set(args){
         let remote = 2;
         this._peripheral.remote_device_set(remote,1,1,1);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     aidesk_read_number(args){
         let fn = parseInt(args['FN'], 10);
@@ -1067,11 +1191,23 @@ class Scratch3aibotSR {
         if(Var4<-2000)Var4=-2000;
         let remote = 1;
         this._peripheral.aidesk_func(remote,func,Var1,Var2,Var3,Var4);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     aidesk_func_stop(args){
         let func=parseInt(args['FN'], 10);
         let remote = 2;
         this._peripheral.aidesk_func(remote,func,0,0,0,0);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
     }
     
 
