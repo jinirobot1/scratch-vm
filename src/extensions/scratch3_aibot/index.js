@@ -462,9 +462,12 @@ class Scratch3aibotSR {
             blocks: [ 
                 {
                     opcode: 'analog_read',
-                    blockType: BlockType.REPORTER,
-                    //text: FormDigitalRead[the_locale],
-                    text: '아날로그 [PORT]번 입력값',
+                    blockType: BlockType.REPORTER,                    
+                    text: formatMessage({
+                        id: 'aibot.analoginput',
+                        default: 'read [PORT] analog input',
+                        description: 'Read Analog Input Value'
+                    }),
                     arguments: {
                         PORT: {
                             type: ArgumentType.STRING,
@@ -476,7 +479,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'digital_read',
                     blockType: BlockType.REPORTER,
-                    text: '디지털 [PORT]번 입력값',
+                    text: formatMessage({
+                        id: 'aibot.digitalinput',
+                        default: 'read [PORT] digital input',
+                        description: 'Read Digital Input Value'
+                    }),
                     arguments: {
                         PORT: {
                             type: ArgumentType.STRING,
@@ -487,8 +494,12 @@ class Scratch3aibotSR {
                 },
                 {
                     opcode: 'port_setting',
-                    blockType: BlockType.COMMAND,
-                    text: '입출력 [PORT]번을 [SET](으)로 설정',
+                    blockType: BlockType.COMMAND,                    
+                    text: formatMessage({
+                        id: 'aibot.portsetting',
+                        default: 'set port[PORT] mode to [SET]',
+                        description: 'Set Port Mode'
+                    }),
                     arguments: {
                         PORT: {
                             type: ArgumentType.STRING,
@@ -505,7 +516,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'port_digital_out',
                     blockType: BlockType.COMMAND,
-                    text: '디지털출력 [PORT]번 [SET]',
+                    text: formatMessage({
+                        id: 'aibot.setdigitalport',
+                        default: 'set port[PORT] to [SET]',
+                        description: 'Set Digital Port'
+                    }),
                     arguments: {
                         PORT: {
                             type: ArgumentType.STRING,
@@ -522,7 +537,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'buzzer_melody',
                     blockType: BlockType.COMMAND,
-                    text: '부저 [MEL]번 효과음 재생',
+                    text: formatMessage({
+                        id: 'aibot.playmelody',
+                        default: 'play buzzer melody [MEL]',
+                        description: 'Play Buzzer Melody'
+                    }),
                     arguments: {
                         MEL: {
                             type: ArgumentType.STRING,
@@ -534,7 +553,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_speed',
                     blockType: BlockType.COMMAND,
-                    text: '제어속도를 [SPD](으)로 정하기',
+                    text: formatMessage({
+                        id: 'aibot.controlspeed',
+                        default: 'set module speed to [SPD]',
+                        description: 'Set Control Speed of Module'
+                    }),
                     arguments: {
                         SPD: {
                             type: ArgumentType.STRING,
@@ -546,7 +569,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_angle',
                     blockType: BlockType.COMMAND,
-                    text: '모듈 [SV](을)를 [ANG]각도로 제어',
+                    text: formatMessage({
+                        id: 'aibot.servoangle',
+                        default: 'module [SV] to [ANG] degrees',
+                        description: 'Control Angle'
+                    }),
                     arguments: {
                         SV: {
                             type: ArgumentType.STRING,
@@ -562,7 +589,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_angle_123',
                     blockType: BlockType.COMMAND,
-                    text: '모듈 1[ANG1], 2[ANG2], 3[ANG3] 각도로 제어',
+                    text: formatMessage({
+                        id: 'aibot.servoangle123',
+                        default: 'modules 1[ANG1], 2[ANG2], 3[ANG3] degrees',
+                        description: 'Control Angle of Module 1,2,3'
+                    }),
                     arguments: {                        
                         ANG1: {
                             type: ArgumentType.NUMBER,
@@ -580,8 +611,12 @@ class Scratch3aibotSR {
                 },  
                 {
                     opcode: 'control_angle_56',
-                    blockType: BlockType.COMMAND,
-                    text: '모듈 5[ANG5], 6[ANG6] 각도로 제어',
+                    blockType: BlockType.COMMAND,                    
+                    text: formatMessage({
+                        id: 'aibot.servoangle56',
+                        default: 'modules 5[ANG5], 6[ANG6] degrees',
+                        description: 'Control Angle of Module5,6'
+                    }),
                     arguments: {  
                         ANG5: {
                             type: ArgumentType.NUMBER,
@@ -595,8 +630,12 @@ class Scratch3aibotSR {
                 },  
                 {
                     opcode: 'control_angle_123456',
-                    blockType: BlockType.COMMAND,
-                    text: '모듈 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4], 5[ANG5], 6[ANG6] 각도로 제어',
+                    blockType: BlockType.COMMAND,                    
+                    text: formatMessage({
+                        id: 'aibot.servoangle123456',
+                        default: 'modules 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4], 5[ANG5], 6[ANG6] degrees',
+                        description: 'Control Angle of All Modules'
+                    }),
                     arguments: {                        
                         ANG1: {
                             type: ArgumentType.NUMBER,
@@ -627,14 +666,22 @@ class Scratch3aibotSR {
                 {
                     opcode: 'control_go_home',
                     blockType: BlockType.COMMAND,
-                    text: '모든 모듈을 기본위치로 제어하기(원점복귀)',
+                    text: formatMessage({
+                        id: 'aibot.gohomeposition',
+                        default: 'return to home position of all modules',
+                        description: 'All Modules Return to Home Position'
+                    }),
                     arguments: {    
                     }
                 }, 
                 {
                     opcode: 'set_home_position',
                     blockType: BlockType.COMMAND,
-                    text: '[SV]번 모듈의 90도 위치를 현재의 위치로 정하기',
+                    text: formatMessage({
+                        id: 'aibot.sethomeposition',
+                        default: 'set current angle of module [SV] as 90 degrees',
+                        description: 'Set Current Angle of a Module as 90 degrees'
+                    }),
                     arguments: {  
                         SV: {
                             type: ArgumentType.STRING,
@@ -646,14 +693,22 @@ class Scratch3aibotSR {
                 {
                     opcode: 'factory_reset',
                     blockType: BlockType.COMMAND,
-                    text: '모든 설정값 공장초기화',
+                    text: formatMessage({
+                        id: 'aibot.factoryreset',
+                        default: 'factory reset of all settings',
+                        description: 'Reset to Factory Settings'
+                    }),
                     arguments: {    
                     }
                 }, 
                 {
                     opcode: 'remote_control_speed',
                     blockType: BlockType.COMMAND,
-                    text: '원격의 제어속도를 [SPD](으)로 정하기',
+                    text: formatMessage({
+                        id: 'aibot.remotecontrolspeed',
+                        default: 'set remote module speed to [SPD]',
+                        description: 'Set Control Speed of Remote Module'
+                    }),
                     arguments: {
                         SPD: {
                             type: ArgumentType.STRING,
@@ -665,7 +720,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'remote_control_angle',
                     blockType: BlockType.COMMAND,
-                    text: '원격모듈 [SV](을)를 [ANG]각도로 제어',
+                    text: formatMessage({
+                        id: 'aibot.remoteservoangle',
+                        default: 'remote module [SV] to [ANG] degrees',
+                        description: 'Control Angle of Remote Module'
+                    }),
                     arguments: {
                         SV: {
                             type: ArgumentType.STRING,
@@ -681,7 +740,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'remote_control_angle_123',
                     blockType: BlockType.COMMAND,
-                    text: '원격모듈 1[ANG1], 2[ANG2], 3[ANG3] 각도로 제어',
+                    text: formatMessage({
+                        id: 'aibot.remoteservoangle123',
+                        default: 'remote modules 1[ANG1], 2[ANG2], 3[ANG3] degrees',
+                        description: 'Control Angle of Remote Module 1,2,3'
+                    }),
                     arguments: {                        
                         ANG1: {
                             type: ArgumentType.NUMBER,
@@ -700,7 +763,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'remote_control_angle_56',
                     blockType: BlockType.COMMAND,
-                    text: '원격모듈 5[ANG5], 6[ANG6] 각도로 제어',
+                    text: formatMessage({
+                        id: 'aibot.remoteservoangle56',
+                        default: 'remote modules 5[ANG5], 6[ANG6] degrees',
+                        description: 'Control Angle of Remote Module 5,6'
+                    }),
                     arguments: {  
                         ANG5: {
                             type: ArgumentType.NUMBER,
@@ -715,7 +782,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'remote_control_angle_123456',
                     blockType: BlockType.COMMAND,
-                    text: '원격모듈 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4], 5[ANG5], 6[ANG6] 각도로 제어',
+                    text: formatMessage({
+                        id: 'aibot.remoteservoangle123456',
+                        default: 'remote modules 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4], 5[ANG5], 6[ANG6] degrees',
+                        description: 'Control Angle of All Remote Modules'
+                    }),
                     arguments: {                        
                         ANG1: {
                             type: ArgumentType.NUMBER,
@@ -746,21 +817,33 @@ class Scratch3aibotSR {
                 {
                     opcode: 'remote_control_go_home',
                     blockType: BlockType.COMMAND,
-                    text: '원격모듈 모듈을 기본위치로 제어하기(원점복귀)',
+                    text: formatMessage({
+                        id: 'aibot.remotegohomeposition',
+                        default: 'return to home position of all remote modules',
+                        description: 'All Remote Modules Return to Home Position'
+                    }),
                     arguments: {    
                     }
                 }, 
                 {
                     opcode: 'remote_device_set',
-                    blockType: BlockType.COMMAND,
-                    text: '원격 디바이스 설정',
+                    blockType: BlockType.COMMAND,                    
+                    text: formatMessage({
+                        id: 'aibot.setremotedevice',
+                        default: 'set remote device',
+                        description: 'Set a Remote Device'
+                    }),
                     arguments: {    
                     }
                 }, 
                 {
                     opcode: 'aidesk_read_number',
                     blockType: BlockType.REPORTER,
-                    text: 'AI Desk의 [FN]번 값',
+                    text: formatMessage({
+                        id: 'aibot.readaidesk',
+                        default: 'read value from [FN] of AIDesk',
+                        description: 'Return a value from AIDesk'
+                    }),
                     arguments: {
                         FN: {
                             type: ArgumentType.STRING,
@@ -772,8 +855,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'aidesk_func_start',
                     blockType: BlockType.COMMAND,
-                    //text: FormDigitalRead[the_locale],
-                    text: 'AI Desk의 [FN]번 기능 시작하기(변수1:[VAR1], 변수2:[VAR2], 변수3:[VAR3], 변수4:[VAR4])',
+                    text: formatMessage({
+                        id: 'aibot.startaideskfunc',
+                        default: 'start function [FN] of AIDesk (var1:[VAR1], var2:[VAR2], var3:[VAR3], var4:[VAR4])',
+                        description: 'Start an AIDesk Function'
+                    }),
                     arguments: {
                         FN: {
                             type: ArgumentType.STRING,
@@ -801,8 +887,11 @@ class Scratch3aibotSR {
                 {
                     opcode: 'aidesk_func_stop',
                     blockType: BlockType.COMMAND,
-                    //text: FormDigitalRead[the_locale],
-                    text: 'AI Desk의 [FN]번 기능 정지하기',
+                    text: formatMessage({
+                        id: 'aibot.stopaideskfunc',
+                        default: 'stop function [FN] of AIDesk',
+                        description: 'Stop an AIDesk Function'
+                    }),
                     arguments: {
                         FN: {
                             type: ArgumentType.STRING,
@@ -821,23 +910,23 @@ class Scratch3aibotSR {
                              {text: "2", value: '1'},
                              {text: "3", value: '2'}, 
                              {text: "4", value: '3'},
-                             {text: "원격1", value: '4'}, 
-                             {text: "원격2", value: '5'},
-                             {text: "원격3", value: '6'}, 
-                             {text: "원격4", value: '7'}
+                             {text: formatMessage({id: 'aibot.remote1',default: 'remote1'}), value: '4'}, 
+                             {text: formatMessage({id: 'aibot.remote2',default: 'remote2'}), value: '5'},
+                             {text: formatMessage({id: 'aibot.remote3',default: 'remote3'}), value: '6'}, 
+                             {text: formatMessage({id: 'aibot.remote4',default: 'remote4'}), value: '7'}
                            ]
                 },
                 port_inout: {
                     acceptReporters: true,
-                    items: [ {text: "디지털입력", value: '0'}, 
-                             {text: "디지털출력", value: '1'}, 
-                             {text: "아날로그입력", value: '2'}
+                    items: [ {text: formatMessage({id: 'aibot.digitalin',default: 'DigitalIn'}), value: '0'}, 
+                             {text: formatMessage({id: 'aibot.digitalout',default: 'DigitalOut'}), value: '1'}, 
+                             {text: formatMessage({id: 'aibot.analogin',default: 'AnalogIn'}), value: '2'}
                            ]
                 },
                 on_off: {
                     acceptReporters: true,
-                    items: [ {text: "켜기", value: '1'}, 
-                             {text: "끄기", value: '0'}
+                    items: [ {text: formatMessage({id: 'aibot.digitalon',default: 'On'}), value: '1'}, 
+                             {text: formatMessage({id: 'aibot.digitaloff',default: 'Off'}), value: '0'}
                            ]
                 },
                 melody_no: {
