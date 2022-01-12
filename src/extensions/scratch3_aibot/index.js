@@ -202,7 +202,7 @@ class aibotSR{
         return _connected;
     }
     send (message, useLimiter = true) {
-        console.log('send message....');
+        //console.log('send message....');
         if (!this.isConnected()) return Promise.resolve();
 
         
@@ -282,7 +282,7 @@ class aibotSR{
             }
             //console.log(data);
             this.rcvCount++;
-            if(this.rcvCount > 1){
+            if(this.rcvCount > 2){
                 this.rcvCount==0;
                 this.connect_device(1);
             }
@@ -1039,7 +1039,7 @@ class Scratch3aibotSR {
     }
     control_angle(args,script){
         let sv = parseInt(args['SV'], 10);
-        let Angle = parseInt(args['ANG'], 10);
+        let Angle = parseFloat(args['ANG'], 10);
         let remote = 1;
         let sv1=0,sv2=0,sv3=0,sv4=0,sv5=0,sv6=0;
         if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;
@@ -1050,7 +1050,7 @@ class Scratch3aibotSR {
         else if(sv==5)sv5 = Angle;
         else if(sv==6)sv6 = Angle; 
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);  
-
+        //
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve();
@@ -1058,9 +1058,9 @@ class Scratch3aibotSR {
         });              
     }
     control_angle_123(args){
-        let sv1 = parseInt(args['ANG1'], 10);
-        let sv2 = parseInt(args['ANG2'], 10);
-        let sv3 = parseInt(args['ANG3'], 10);
+        let sv1 = parseFloat(args['ANG1'], 10);
+        let sv2 = parseFloat(args['ANG2'], 10);
+        let sv3 = parseFloat(args['ANG3'], 10);
         let remote = 1;
         let sv4=0,sv5=0,sv6=0;
 
@@ -1076,8 +1076,8 @@ class Scratch3aibotSR {
         });    
     }
     control_angle_56(args){
-        let sv5 = parseInt(args['ANG5'], 10);
-        let sv6 = parseInt(args['ANG6'], 10);
+        let sv5 = parseFloat(args['ANG5'], 10);
+        let sv6 = parseFloat(args['ANG6'], 10);
         let remote = 1;
         let sv1=0,sv2=0,sv3=0,sv4=0;
 
@@ -1092,12 +1092,12 @@ class Scratch3aibotSR {
         });    
     }
     control_angle_123456(args){
-        let sv1 = parseInt(args['ANG1'], 10);
-        let sv2 = parseInt(args['ANG2'], 10);
-        let sv3 = parseInt(args['ANG3'], 10);
-        let sv4 = parseInt(args['ANG4'], 10);
-        let sv5 = parseInt(args['ANG5'], 10);
-        let sv6 = parseInt(args['ANG6'], 10);
+        let sv1 = parseFloat(args['ANG1'], 10);
+        let sv2 = parseFloat(args['ANG2'], 10);
+        let sv3 = parseFloat(args['ANG3'], 10);
+        let sv4 = parseFloat(args['ANG4'], 10);
+        let sv5 = parseFloat(args['ANG5'], 10);
+        let sv6 = parseFloat(args['ANG6'], 10);
         let remote = 1;
 
         if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
@@ -1164,7 +1164,7 @@ class Scratch3aibotSR {
     }
     remote_control_angle(args){
         let sv = parseInt(args['SV'], 10);
-        let Angle = parseInt(args['ANG'], 10);
+        let Angle = parseFloat(args['ANG'], 10);
         let remote = 2;
         let sv1=0,sv2=0,sv3=0,sv4=0,sv5=0,sv6=0;
         if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;
@@ -1183,9 +1183,9 @@ class Scratch3aibotSR {
         });    
     }
     remote_control_angle_123(args){
-        let sv1 = parseInt(args['ANG1'], 10);
-        let sv2 = parseInt(args['ANG2'], 10);
-        let sv3 = parseInt(args['ANG3'], 10);
+        let sv1 = parseFloat(args['ANG1'], 10);
+        let sv2 = parseFloat(args['ANG2'], 10);
+        let sv3 = parseFloat(args['ANG3'], 10);
         let remote = 2;
         let sv4=0,sv5=0,sv6=0;
 
@@ -1201,8 +1201,8 @@ class Scratch3aibotSR {
         });    
     }
     remote_control_angle_56(args){
-        let sv5 = parseInt(args['ANG5'], 10);
-        let sv6 = parseInt(args['ANG6'], 10);
+        let sv5 = parseFloat(args['ANG5'], 10);
+        let sv6 = parseFloat(args['ANG6'], 10);
         let remote = 2;
         let sv1=0,sv2=0,sv3=0,sv4=0;
 
@@ -1217,12 +1217,12 @@ class Scratch3aibotSR {
         });    
     }
     remote_control_angle_123456(args){
-        let sv1 = parseInt(args['ANG1'], 10);
-        let sv2 = parseInt(args['ANG2'], 10);
-        let sv3 = parseInt(args['ANG3'], 10);
-        let sv4 = parseInt(args['ANG4'], 10);
-        let sv5 = parseInt(args['ANG5'], 10);
-        let sv6 = parseInt(args['ANG6'], 10);
+        let sv1 = parseFloat(args['ANG1'], 10);
+        let sv2 = parseFloat(args['ANG2'], 10);
+        let sv3 = parseFloat(args['ANG3'], 10);
+        let sv4 = parseFloat(args['ANG4'], 10);
+        let sv5 = parseFloat(args['ANG5'], 10);
+        let sv6 = parseFloat(args['ANG6'], 10);
         let remote = 2;
 
         if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
