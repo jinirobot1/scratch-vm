@@ -1103,6 +1103,7 @@ class Scratch3aibotSR {
         if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
         if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
         if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
+        if(sv4<0)sv4 = 0;if(sv4>180)sv4 = 180;sv4 = sv4*10 + 700;
         if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
         if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
@@ -1228,6 +1229,7 @@ class Scratch3aibotSR {
         if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
         if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
         if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
+        if(sv4<0)sv4 = 0;if(sv4>180)sv4 = 180;sv4 = sv4*10 + 700;
         if(sv5<0)sv5 = 0;if(sv5>180)sv5 = 180;sv5 = sv5*10 + 700;  
         if(sv6<0)sv6 = 0;if(sv6>180)sv6 = 180;sv6 = sv6*10 + 700;
         this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
