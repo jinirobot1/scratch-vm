@@ -24,7 +24,16 @@ const builtinExtensions = {
     makeymakey: () => require('../extensions/scratch3_makeymakey'),
     boost: () => require('../extensions/scratch3_boost'),
     gdxfor: () => require('../extensions/scratch3_gdx_for'),
-    aibot: () => require('../extensions/scratch3_aibot')
+    aibot: () => require('../extensions/scratch3_aibot'),
+    ml2scratch: () => require('../extensions/scratch3_ml2scratch'),
+    tm2scratch: () => require('../extensions/scratch3_tm2scratch'),
+    tmpose2scratch: () => require('../extensions/scratch3_tmpose2scratch'),
+    facemesh2scratch: () => require('../extensions/scratch3_facemesh2scratch'),
+    handpose2scratch: () => require('../extensions/scratch3_handpose2scratch'),
+    ic2scratch: () => require('../extensions/scratch3_ic2scratch'),
+    posenet2scratch:  () => require('../extensions/scratch3_posenet2scratch'),
+    speech2scratch:  () => require('../extensions/scratch3_speech2scratch'),
+
 
 };
 

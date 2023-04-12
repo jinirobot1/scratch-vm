@@ -43,6 +43,21 @@ const blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAnCAYA
 
 // common
 
+const Message = {
+    name: {      
+        'en': 'AIBOT',
+        'ko': 'AIBOT'
+    },
+    angle_control_1234: {
+        'en': 'modules 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4] degrees',
+        'ko': '모듈 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4] 각도로 제어'    
+    },
+    remote_angle_control_1234: {
+        'en': 'remote modules 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4] degrees',
+        'ko': '원격모듈 1[ANG1], 2[ANG2], 3[ANG3], 4[ANG4] 각도로 제어'    
+    }      
+}
+
 class aibotSR{
     constructor (runtime, extensionId) {
     //the_locale = this._setLocale();
@@ -442,10 +457,14 @@ class Scratch3aibotSR {
          */
         this.runtime = runtime;
 
+        this.locale = this._setLocale();
+
         // Create a new aibotSR peripheral instance
         this._peripheral = new aibotSR(this.runtime, Scratch3aibotSR.EXTENSION_ID);
 
     }
+
+    
 
     getInfo() {
         //the_locale = this._setLocale();
@@ -585,6 +604,25 @@ class Scratch3aibotSR {
                             defaultValue: '90',
                         },
                     }
+                },   
+                {
+                    opcode: 'control_angle',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'aibot.servoangle',
+                        default: 'module [SV] to [ANG] degrees',
+                        description: 'Control Angle'
+                    }),
+                    arguments: {
+                        SV: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '1',
+                        },
+                        ANG: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
                 },         
                 {
                     opcode: 'control_angle_123',
@@ -604,6 +642,29 @@ class Scratch3aibotSR {
                             defaultValue: '90',
                         },
                         ANG3: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
+                },  
+                {
+                    opcode: 'control_angle_1234',
+                    blockType: BlockType.COMMAND,
+                    text: Message.angle_control_1234[this.locale],
+                    arguments: {                        
+                        ANG1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG3: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG4: {
                             type: ArgumentType.NUMBER,
                             defaultValue: '90',
                         },
@@ -736,7 +797,26 @@ class Scratch3aibotSR {
                             defaultValue: '90',
                         },
                     }
-                },         
+                },      
+                {
+                    opcode: 'remote_control_angle',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'aibot.remoteservoangle',
+                        default: 'remote module [SV] to [ANG] degrees',
+                        description: 'Control Angle of Remote Module'
+                    }),
+                    arguments: {
+                        SV: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '1',
+                        },
+                        ANG: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
+                },   
                 {
                     opcode: 'remote_control_angle_123',
                     blockType: BlockType.COMMAND,
@@ -755,6 +835,29 @@ class Scratch3aibotSR {
                             defaultValue: '90',
                         },
                         ANG3: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                    }
+                },  
+                {
+                    opcode: 'remote_control_angle_1234',
+                    blockType: BlockType.COMMAND,
+                    text: Message.remote_angle_control_1234[this.locale],
+                    arguments: {                        
+                        ANG1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG3: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: '90',
+                        },
+                        ANG4: {
                             type: ArgumentType.NUMBER,
                             defaultValue: '90',
                         },
@@ -1075,6 +1178,26 @@ class Scratch3aibotSR {
             }, SRSendInterval);
         });    
     }
+    control_angle_1234(args){
+        let sv1 = parseFloat(args['ANG1'], 10);
+        let sv2 = parseFloat(args['ANG2'], 10);
+        let sv3 = parseFloat(args['ANG3'], 10);
+        let sv4 = parseFloat(args['ANG4'], 10);
+        let remote = 1;
+        let sv5=0,sv6=0;
+
+        if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
+        if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
+        if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
+        if(sv4<0)sv4 = 0;if(sv4>180)sv4 = 180;sv4 = sv4*10 + 700;
+        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
+    }
     control_angle_56(args){
         let sv5 = parseFloat(args['ANG5'], 10);
         let sv6 = parseFloat(args['ANG6'], 10);
@@ -1201,6 +1324,26 @@ class Scratch3aibotSR {
             }, SRSendInterval);
         });    
     }
+    remote_control_angle_1234(args){
+        let sv1 = parseFloat(args['ANG1'], 10);
+        let sv2 = parseFloat(args['ANG2'], 10);
+        let sv3 = parseFloat(args['ANG3'], 10);
+        let sv4 = parseFloat(args['ANG4'], 10);
+        let remote = 2;
+        let sv5=0,sv6=0;
+
+        if(sv1<0)sv1 = 0;if(sv1>180)sv1 = 180;sv1 = sv1*10 + 700;  
+        if(sv2<0)sv2 = 0;if(sv2>180)sv2 = 180;sv2 = sv2*10 + 700;  
+        if(sv3<0)sv3 = 0;if(sv3>180)sv3 = 180;sv3 = sv3*10 + 700;
+        if(sv4<0)sv4 = 0;if(sv4>180)sv4 = 180;sv4 = sv4*10 + 700;
+        this._peripheral.control_angle(remote,sv1,sv2,sv3,sv4,sv5,sv6);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve();
+            }, SRSendInterval);
+        });    
+    }
     remote_control_angle_56(args){
         let sv5 = parseFloat(args['ANG5'], 10);
         let sv6 = parseFloat(args['ANG6'], 10);
@@ -1307,8 +1450,8 @@ class Scratch3aibotSR {
     _setLocale () {
         let now_locale = '';
         switch (formatMessage.setup().locale) {
-            case 'kr':
-                now_locale = 'kr';
+            case 'ko':
+                now_locale = 'ko';
                 break;
             case 'pt-br':
             case 'pt':
